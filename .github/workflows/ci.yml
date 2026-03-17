@@ -33,13 +33,13 @@ jobs:
       - name: Create SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H 16.171.31.99 >> ~/.ssh/known_hosts || true
 
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/deploy_key ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -i ~/.ssh/deploy_key ubuntu@16.171.31.99 << 'EOF'
             cd /home/ubuntu/apps/simple-application-devops
             git pull origin main
             npm install
